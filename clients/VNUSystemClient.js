@@ -3,12 +3,11 @@ const Client = require('./clients');
 class VNUSystemClient extends Client {
     constructor(){
         super("VNU_SYSTEM")
-        VNUSystemClient.instance = this
-        return VNUSystemClient.instance
+        return this
     }
 }
 
-const VNUSystemClient = new VNUSystemClient();
-Object.freeze(VNUSystemClient);
+const instance = new VNUSystemClient();
+Object.freeze(instance);
 
-module.exports = VNUSystemClient
+module.exports = instance
