@@ -13,7 +13,7 @@ class Login {
   
     registerRoute(router) {
       return router
-        .post('/auth/login', this.loginFromVNU)
+        .post('/auth/async/login', this.loginFromVNU)
     }
 
     loginFromVNU(req, res, next) {
