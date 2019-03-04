@@ -1,19 +1,15 @@
 const {ErrorHandler} = require('libs');
-const {VNUSystemClient} = require('clients')
+const {PhantomService} = require('libs');
 
 class LoginService {
-    static async loginFromVNU( username, password ) {
-        const body = {
-            chkSubmit: "ok",
-            txtSel: 2,
-            txtLoginId: username,
-            txtPassword: password
-        }
-        const headers = {
-            "Content-Type":'application/x-www-form-urlencoded'
-        }
-        let result = await VNUSystemClient.request('/dkmh/login.asp', 'POST', body, headers)
-        return result
+    static async loginFromVNU( username, password, res) {
+        PhantomService.login(username, password, res)
+            .then(result => {
+                return result
+            })
+            .catch(error => {
+                throw error
+            })
     }
 }
 
