@@ -4,7 +4,7 @@ const setting = require('../config/setting.json');
 class PhantomService {
     static async login(username, password, res) {
         try {
-            let infoDetail = ['id','fullName','gender','birthday','address','phone','email'];
+            let infoDetail = ['id','fullName','gender','birthday','address','phone','email','semesterMark'];
             const openBrowser = puppeteer.launch({headless: true});
             const browser = await openBrowser;
             const page = await browser.newPage();

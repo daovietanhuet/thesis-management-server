@@ -13,17 +13,27 @@ class Login {
   
     registerRoute(router) {
       return router
+        .post('/auth/login', this.login)
         .post('/auth/async/login', this.loginFromVNU)
+    }
+
+    login(req, res, next) {
+        let {username, password} = req.body;
+        LoginService.login(username, password)
+          .then(result => {
+            res.status(200).json({result, httpCode:200})
+          })
+          .catch(error => {
+            next(ErrorHandler.createErrorWithFailures(error.message, error.httpCode || 500, error.name || 'SERVER_ERROR', error.failures))
+          })
     }
 
     loginFromVNU(req, res, next) {
         let {username, password} = req.body;
-        LoginService.loginFromVNU(username, password, res, next)
-            .then(result => {
-            })
-            .catch(error => {
-                next(ErrorHandler.createErrorWithFailures(error.message, error.httpCode || 500, error.name || 'SERVER_ERROR', error.failures))
-            })
+        LoginService.loginFromVNU(username, password, res)
+          .catch(error => {
+            next(ErrorHandler.createErrorWithFailures(error.message, error.httpCode || 500, error.name || 'SERVER_ERROR', error.failures))
+          })
     }
 }
 
