@@ -27,6 +27,7 @@
     "express": "^4.16.4",
     "jsonwebtoken": "^8.5.0",
     "libs": "file:libs",
+    "mysql2": "^1.6.5",
     "nunjucks": "^3.1.7",
     "path": "^0.12.7",
     "puppeteer": "^1.12.2",
