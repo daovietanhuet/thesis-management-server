@@ -29,7 +29,7 @@ class PhantomService {
             res.status(200).json({result: info, httpCode: 200});
             return info 
         } catch (error) {
-            res.status(500).json({error})
+            res.status(500).json({error: {...error, name: 'user not exist'}})
         }
     }
 }
