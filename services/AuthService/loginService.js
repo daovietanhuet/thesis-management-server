@@ -12,11 +12,12 @@ class LoginService {
                 where:{
                     username
                 },
-                attributes: ['id', 'role', 'password']
+                attributes: ['id', 'role', 'password', 'numberLogin']
             })
             if(!user || !CryptoHelper.comparePassword(password,user.password)) throw ErrorHandler.generateError('username or password is incorrect', 400, 'INVALID')
             else {
-                await UsersRepository.updateAttributes(user,{isLogin:true})
+                let numberLogin = user.numberLogin + 1;
+                await UsersRepository.updateAttributes(user,{numberLogin:numberLogin})
                 let data = {
                     id: user.id,
                     role: user.role,

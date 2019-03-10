@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     userCode: {type: DataTypes.STRING, field:'user_code'},
     username: DataTypes.STRING,
     password: DataTypes.STRING,
-    isLogin: {type: DataTypes.BOOLEAN, field:'is_login'},
+    numberLogin: {type: DataTypes.INTEGER, field:'number_login'},
     changePassAt: {type: DataTypes.DATE, field:'change_pass_at'},
     role: DataTypes.STRING
   }, {

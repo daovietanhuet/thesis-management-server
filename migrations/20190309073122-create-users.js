@@ -17,8 +17,8 @@ module.exports = {
       password: {
         type: Sequelize.STRING
       },
-      is_login: {
-        type: Sequelize.BOOLEAN
+      number_login: {
+        type: Sequelize.INTEGER
       },
       change_pass_at: {
         type: Sequelize.DATE
