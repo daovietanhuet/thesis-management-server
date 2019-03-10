@@ -12,7 +12,7 @@ class LoginService {
                 where:{
                     username
                 },
-                attributes: ['id','role', 'password']
+                attributes: ['id', 'role', 'password']
             })
             if(!user || !CryptoHelper.comparePassword(password,user.password)) throw ErrorHandler.generateError('username or password is incorrect', 400, 'INVALID')
             else {
