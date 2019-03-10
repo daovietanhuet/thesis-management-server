@@ -1,5 +1,6 @@
 const {ErrorHandler} = require('libs');
 const {PhantomService} = require('libs');
+const {CryptoHelper} = require('libs');
 const {UsersRepository} = require('repositories');
 const jwt = require('jsonwebtoken');
 
@@ -9,19 +10,18 @@ class LoginService {
         try{
             let user = await UsersRepository.findOne({
                 where:{
-                    username,
-                    password
+                    username
                 },
-                attributes: ['id','role']
+                attributes: ['id','role', 'password']
             })
-            if(!user) throw ErrorHandler.generateError('user not found', 404, 'NOT FOUND')
+            if(!user || !CryptoHelper.comparePassword(password,user.password)) throw ErrorHandler.generateError('user not found', 404, 'NOT FOUND')
             else {
                 await UsersRepository.updateAttributes(user,{isLogin:true})
                 let data = {
                     id: user.id,
                     role: user.role,
                 }
-                let token = await jwt.sign({data}, `${clientIp}@${username}@${password}@uetthesis`, {expiresIn: '24h'})
+                let token = await jwt.sign({data}, `${clientIp}@${username}@${user.password}@uetthesis`, {expiresIn: '24h'})
                 return {token}
             }
         } catch (error) {
