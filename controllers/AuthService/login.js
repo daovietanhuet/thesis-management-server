@@ -1,5 +1,6 @@
 const {LoginService} = require('services');
 const {ErrorHandler} = require('libs');
+const verifyToken = require('../../services/middleware/verifyToken');
 
 class Login {
     constructor() {
@@ -13,13 +14,15 @@ class Login {
   
     registerRoute(router) {
       return router
+        .post('/verify', verifyToken, this.verifyToken)
         .post('/auth/login', this.login)
         .post('/auth/async/login', this.loginFromVNU)
     }
 
     login(req, res, next) {
         let {username, password} = req.body;
-        LoginService.login(username, password)
+        let clientIp = res.connection.remoteAddress;
+        LoginService.login(username, password, clientIp)
           .then(result => {
             res.status(200).json({result, httpCode:200})
           })
@@ -34,6 +37,10 @@ class Login {
           .catch(error => {
             next(ErrorHandler.createErrorWithFailures(error.message, error.httpCode || 500, error.name || 'SERVER_ERROR', error.failures))
           })
+    }
+
+    verifyToken(req, res, next) {
+        res.status(200).json({result:{userId: req.userId, userRole: req.userRole}, httpCode:200})
     }
 }
 

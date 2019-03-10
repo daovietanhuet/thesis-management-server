@@ -8,8 +8,8 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user_id: {
-        type: Sequelize.INTEGER
+      user_code: {
+        type: Sequelize.STRING
       },
       username: {
         type: Sequelize.STRING
@@ -17,8 +17,8 @@ module.exports = {
       password: {
         type: Sequelize.STRING
       },
-      is_login: {
-        type: Sequelize.BOOLEAN
+      number_login: {
+        type: Sequelize.INTEGER
       },
       change_pass_at: {
         type: Sequelize.DATE

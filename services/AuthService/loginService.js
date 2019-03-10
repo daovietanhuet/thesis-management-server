@@ -1,9 +1,33 @@
 const {ErrorHandler} = require('libs');
 const {PhantomService} = require('libs');
+const {CryptoHelper} = require('libs');
+const {UsersRepository} = require('repositories');
+const jwt = require('jsonwebtoken');
 
 class LoginService {
-    static async login(username, password) {
-        
+    static async login(username, password, clientIp) {
+        if(!username || !password) throw ErrorHandler.generateError('username or password is undefine', 400, 'UNDEFINE')
+        try{
+            let user = await UsersRepository.findOne({
+                where:{
+                    username
+                },
+                attributes: ['id', 'role', 'password', 'numberLogin']
+            })
+            if(!user || !CryptoHelper.comparePassword(password,user.password)) throw ErrorHandler.generateError('username or password is incorrect', 400, 'INVALID')
+            else {
+                let numberLogin = user.numberLogin + 1;
+                await UsersRepository.updateAttributes(user,{numberLogin:numberLogin})
+                let data = {
+                    id: user.id,
+                    role: user.role,
+                }
+                let token = await jwt.sign({data}, `${clientIp}@${username}@${user.password}@uetthesis`, {expiresIn: '24h'})
+                return {token}
+            }
+        } catch (error) {
+            throw error
+        }
     }
 
     static async loginFromVNU(username, password, res) {
