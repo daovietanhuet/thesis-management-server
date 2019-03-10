@@ -14,10 +14,15 @@ module.exports = (req, res, next) => {
                 attributes:['password','username']
             })
             .then (user => {
-                let result = jwt.verify(bearerToken, `${req.connection.remoteAddress}@${user.username}@${user.password}@uetthesis`)
-                req.userId = result.data.id
-                req.userRole = result.data.role
-                next()
+                jwt.verify(bearerToken, `${req.connection.remoteAddress}@${user.username}@${user.password}@uetthesis`, (error, result)=>{
+                    if(result){
+                        req.userId = result.data.id
+                        req.userRole = result.data.role
+                        next()
+                    } else if (error) {
+                        next(ErrorHandler.generateError('permission denied', 401, 'PERMISSION DENIED'))
+                    }
+                })
             })
         } catch (error) {
             throw ErrorHandler.generateError('permission denied', 401, 'PERMISSION DENIED')

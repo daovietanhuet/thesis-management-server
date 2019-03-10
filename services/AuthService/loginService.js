@@ -14,7 +14,7 @@ class LoginService {
                 },
                 attributes: ['id','role', 'password']
             })
-            if(!user || !CryptoHelper.comparePassword(password,user.password)) throw ErrorHandler.generateError('user not found', 404, 'NOT FOUND')
+            if(!user || !CryptoHelper.comparePassword(password,user.password)) throw ErrorHandler.generateError('username or password is incorrect', 400, 'INVALID')
             else {
                 await UsersRepository.updateAttributes(user,{isLogin:true})
                 let data = {
