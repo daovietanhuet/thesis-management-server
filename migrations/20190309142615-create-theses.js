@@ -27,7 +27,7 @@ module.exports = {
         type: Sequelize.TEXT
       },
       planning: {
-        type: Sequelize.TEXT
+        type: Sequelize.JSON
       },
       thesis_mark: {
         type: Sequelize.INTEGER

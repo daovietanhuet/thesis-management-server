@@ -1,23 +1,24 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const theses = sequelize.define('theses', {
-    thesis_code: DataTypes.STRING,
-    thesis_subject: DataTypes.STRING,
-    student_id: DataTypes.INTEGER,
-    lecturer_id: DataTypes.INTEGER,
+  const Theses = sequelize.define('Theses', {
+    thesisCode: {type: DataTypes.STRING, field:'thesis_code'},
+    thesisSubject: {type: DataTypes.STRING, field:'thesis_subject'},
+    studentId: {type: DataTypes.INTEGER, field:'student_id'},
+    lecturerId: {type: DataTypes.INTEGER, field:'lecturer_id'},
     state: DataTypes.STRING,
     describle: DataTypes.TEXT,
-    planning: DataTypes.TEXT,
-    thesis_mark: DataTypes.INTEGER,
+    planning: DataTypes.JSON,
+    thesisMark: {type: DataTypes.INTEGER, field:'thesis_mark'},
     university: DataTypes.STRING,
     branch: DataTypes.STRING,
-    is_completed: DataTypes.BOOLEAN,
-    is_cancel: DataTypes.BOOLEAN
+    isCompleted: {type: DataTypes.BOOLEAN, field:'is_completed'},
+    isCancel: {type: DataTypes.BOOLEAN, field:'is_cancel'}
   }, {
+    tableName:'theses',
     underscored: true,
   });
-  theses.associate = function(models) {
+  Theses.associate = function(models) {
     // associations can be defined here
   };
-  return theses;
+  return Theses;
 };

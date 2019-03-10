@@ -1,15 +1,16 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const activities = sequelize.define('activities', {
-    user_id: DataTypes.INTEGER,
+  const Activities = sequelize.define('Activities', {
+    userId: {type: DataTypes.INTEGER, field:'user_id'},
     content: DataTypes.TEXT,
     state: DataTypes.STRING,
-    creator_id: DataTypes.INTEGER
+    creatorId: {type: DataTypes.INTEGER, field:'creator_id'}
   }, {
+    tableName:'activities',
     underscored: true,
   });
-  activities.associate = function(models) {
+  Activities.associate = function(models) {
     // associations can be defined here
   };
-  return activities;
+  return Activities;
 };

@@ -1,16 +1,17 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const annual_report = sequelize.define('annual_report', {
-    thesis_id: DataTypes.INTEGER,
+  const AnnualReport = sequelize.define('AnnualReport', {
+    thesisId: {type: DataTypes.INTEGER, field:'thesis_id'},
     completed: DataTypes.TEXT,
     incompleted: DataTypes.TEXT,
     difficulty: DataTypes.TEXT,
-    creator_id: DataTypes.INTEGER
+    creatorId: {type: DataTypes.INTEGER, field:'creator_id'}
   }, {
+    tableName:'annual_reports',
     underscored: true,
   });
-  annual_report.associate = function(models) {
+  AnnualReport.associate = function(models) {
     // associations can be defined here
   };
-  return annual_report;
+  return AnnualReport;
 };
