@@ -1,3 +1,4 @@
+'use strict';
 const {UsersRepository} = require('repositories');
 const {ErrorHandler} = require('libs');
 const jwt = require('jsonwebtoken');

@@ -1,6 +1,4 @@
-const {ErrorHandler} = require('libs');
-const {PhantomService} = require('libs');
-const {CryptoHelper} = require('libs');
+const {ErrorHandler, PhantomService, CryptoHelper} = require('libs');
 const {UsersRepository} = require('repositories');
 const jwt = require('jsonwebtoken');
 

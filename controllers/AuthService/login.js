@@ -1,6 +1,6 @@
 const {LoginService} = require('services');
 const {ErrorHandler} = require('libs');
-const verifyToken = require('../../services/middleware/verifyToken');
+const {verifyToken} = require('middlewares');
 
 class Login {
     constructor() {
