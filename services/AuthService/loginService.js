@@ -1,12 +1,10 @@
-const {ErrorHandler} = require('libs');
-const {PhantomService} = require('libs');
-const {CryptoHelper} = require('libs');
+const {ErrorHandler, PhantomService, CryptoHelper} = require('libs');
 const {UsersRepository} = require('repositories');
 const jwt = require('jsonwebtoken');
 
 class LoginService {
     static async login(username, password, clientIp) {
-        if(!username || !password) throw ErrorHandler.generateError('username or password is undefine', 400, 'UNDEFINE')
+        if(!username || !password) throw ErrorHandler.generateError('username or password is undefined', 400, 'UNDEFINED')
         try{
             let user = await UsersRepository.findOne({
                 where:{
