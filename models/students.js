@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     semesterMark: {type: DataTypes.JSON, field: 'semester_mark'},
     class: {type: DataTypes.STRING, field: 'class'},
     numberCompletedThesis: {type: DataTypes.INTEGER, field: 'number_completed_thesis'},
-    describe: {type: DataTypes.TEXT, field: 'describle'},
+    describle: {type: DataTypes.TEXT, field: 'describe'},
     numberNewActivity: {type: DataTypes.INTEGER, field: 'number_new_activity'}
   }, {
     tableName: 'students',

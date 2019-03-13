@@ -31,14 +31,15 @@ class LecturerThesisService {
             })
             if(!resultThesis) throw ErrorHandler.generateError('unknown error', 500, 'UNKNOWN')
             else {
-                await ActivitiesRepository.create({
+                let createActivity = ActivitiesRepository.create({
                     userId,
                     content: 'tạo khóa luận mới',
                     state: Constant.ACTIVITY_STATE.LOGGING,
                     creatorId: userId
                 })
                 let numberNewActivity = lecturer.numberNewActivity + 1
-                await LecturersRepository.updateAttributes(lecturer, {numberNewActivity})
+                let updateLecturer =  LecturersRepository.updateAttributes(lecturer, {numberNewActivity})
+                await Promise.all([createActivity, updateLecturer])
                 return resultThesis
             }
         } catch (error) {
