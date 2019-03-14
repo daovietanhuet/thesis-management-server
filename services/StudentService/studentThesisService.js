@@ -9,12 +9,14 @@ class StudentThesisService {
         let thesis = ThesesRepository.findOne({
             where: {
                 id: thesisId,
+                studentId: null,
                 state: Constant.THESIS_STATE.NEW
             }
         });
         let result = await Promise.all([student, thesis]);
         student = result[0]; thesis = result[1];
         if(!student) throw ErrorHandler.generateError('student not found', 404, 'NOT FOUND');
+        if(student.numberCompletedThesis > 0) throw ErrorHandler.generateError('student invalid', 500, 'INVALID');
         if(!thesis) throw ErrorHandler.generateError('thesis not found or not new', 400, 'NOT FOUND');
 
         let numberJoinedThesis = ThesesRepository.count({
@@ -44,7 +46,7 @@ class StudentThesisService {
             let numberNewActivity = student.numberNewActivity + 1
             let updateActivityStudent =  StudentsRepository.updateAttributes(student, {numberNewActivity})
             let numberNewActivityLecturer = lecturer.numberNewActivity + 1
-            let updateActivityLecturer = LecturersRepository.updateAttributes(lecturer, {numberNewActivityLecturer})
+            let updateActivityLecturer = LecturersRepository.updateAttributes(lecturer, {numberNewActivity: numberNewActivityLecturer})
             await Promise.all([createActivity, updateActivityStudent, updateActivityLecturer])
             return thesisUpdate
         }

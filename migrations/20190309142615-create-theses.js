@@ -38,12 +38,6 @@ module.exports = {
       branch: {
         type: Sequelize.STRING
       },
-      is_completed: {
-        type: Sequelize.BOOLEAN
-      },
-      is_cancel: {
-        type: Sequelize.BOOLEAN
-      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

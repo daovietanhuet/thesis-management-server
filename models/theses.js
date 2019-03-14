@@ -10,9 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     planning: DataTypes.JSON,
     thesisMark: {type: DataTypes.INTEGER, field:'thesis_mark'},
     university: DataTypes.STRING,
-    branch: DataTypes.STRING,
-    isCompleted: {type: DataTypes.BOOLEAN, field:'is_completed'},
-    isCancel: {type: DataTypes.BOOLEAN, field:'is_cancel'}
+    branch: DataTypes.STRING
   }, {
     tableName:'theses',
     underscored: true,
