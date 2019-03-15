@@ -14,9 +14,9 @@ class studentThesis {
   
     registerRoute(router) {
       return router
-        .post('/student/thesis/:thesisId', verifyToken, this.joinThesis)
-        .patch('/student/thesis/:thesisId', verifyToken, this.planningThesis)
-        .post('/student/thesisReport/:thesisId', verifyToken, this.reportThesis)
+        .post('/student/thesis/join/:thesisId', verifyToken, this.joinThesis)
+        .patch('/student/thesis/plan/:thesisId', verifyToken, this.planningThesis)
+        .post('/student/thesis/report/:thesisId', verifyToken, this.reportThesis)
     }
 
     joinThesis(req, res, next) {
