@@ -131,6 +131,7 @@ class LecturerThesisService {
             let numberNewActivityStudent = student.numberNewActivity + 1
             let updateStudent = StudentsRepository.updateAttributes(student, {numberNewActivity: numberNewActivityStudent})
             await Promise.all([createActivity, updateLecturer, updateStudent])
+            return updateThesis
         }
     }
 }
