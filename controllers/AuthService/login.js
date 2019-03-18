@@ -20,9 +20,9 @@ class Login {
     }
 
     login(req, res, next) {
-        let {username, password} = req.body;
+        let {username, password, userRole} = req.body;
         let clientIp = res.connection.remoteAddress;
-        LoginService.login(username, password, clientIp)
+        LoginService.login(username, password, userRole, clientIp)
           .then(result => {
             res.status(200).json({result, httpCode:200})
           })

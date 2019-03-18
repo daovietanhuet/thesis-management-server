@@ -14,7 +14,9 @@ class studentThesis {
   
     registerRoute(router) {
       return router
-        .post('/student/thesis/:thesisId', verifyToken, this.joinThesis)
+        .post('/student/thesis/join/:thesisId', verifyToken, this.joinThesis)
+        .patch('/student/thesis/plan/:thesisId', verifyToken, this.planningThesis)
+        .post('/student/thesis/report/:thesisId', verifyToken, this.reportThesis)
     }
 
     joinThesis(req, res, next) {
@@ -28,6 +30,32 @@ class studentThesis {
           .catch(error => {
             next(ErrorHandler.createErrorWithFailures(error.message, error.httpCode || 500, error.name || 'SERVER_ERROR', error.failures))
           })
+    }
+
+    planningThesis(req, res, next) {
+      let {userId, userRole} = req;
+      let thesisId = req.params.thesisId;
+      verifyRole(userRole, true, false, false);
+      StudentThesisService.planningThesis(userId, thesisId, req.body)
+        .then(result => {
+          res.status(200).json({result, httpCode:200})
+        })
+        .catch(error => {
+          next(ErrorHandler.createErrorWithFailures(error.message, error.httpCode || 500, error.name || 'SERVER_ERROR', error.failures))
+        })
+    }
+
+    reportThesis(req, res, next) {
+      let {userId, userRole} = req;
+      let thesisId = req.params.thesisId;
+      verifyRole(userRole, true, false, false);
+      StudentThesisService.reportThesis(userId, thesisId, req.body)
+        .then(result => {
+          res.status(200).json({result, httpCode:200})
+        })
+        .catch(error => {
+          next(ErrorHandler.createErrorWithFailures(error.message, error.httpCode || 500, error.name || 'SERVER_ERROR', error.failures))
+        })
     }
 }
 

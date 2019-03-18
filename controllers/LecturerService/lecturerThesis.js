@@ -14,7 +14,7 @@ class lecturerThesis {
   
     registerRoute(router) {
       return router
-        .post('/lecturer/thesis', verifyToken, this.createThesis)
+        .post('/lecturer/thesis/create', verifyToken, this.createThesis)
         .post('/lecturer/thesis/accept/:thesisId', verifyToken, this.acceptThesis)
         .post('/lecturer/thesis/reject/:thesisId', verifyToken, this.rejectThesis)
     }
