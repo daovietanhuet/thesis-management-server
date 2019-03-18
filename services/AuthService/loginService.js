@@ -3,12 +3,13 @@ const {UsersRepository} = require('repositories');
 const jwt = require('jsonwebtoken');
 
 class LoginService {
-    static async login(username, password, clientIp) {
+    static async login(username, password, userRole, clientIp) {
         if(!username || !password) throw ErrorHandler.generateError('username or password is undefined', 400, 'UNDEFINED')
         try{
             let user = await UsersRepository.findOne({
                 where:{
-                    username
+                    username,
+                    role: userRole
                 },
                 attributes: ['id', 'role', 'password', 'numberLogin']
             })
