@@ -256,6 +256,39 @@ class LecturerThesisService {
             return deleteThesis
         }
     }
+
+    static async describleThesis(userId, thesisId, describle) {
+        let lecturer = await LecturersRepository.findOne({
+            where: {userId}
+        })
+        if(!lecturer) throw ErrorHandler.generateError('lecturer not found', 404, 'NOT FOUND');
+
+        let thesis = await ThesesRepository.findOne({
+            where: {
+                id: thesisId, 
+                lecturerId: lecturer.id, 
+                state: Constant.THESIS_STATE.NEW
+            }
+        })
+        if(!thesis) throw ErrorHandler.generateError('invalid thesis', 400, 'INVALID');
+
+        if(!describe || typeof describe !== 'string')  throw ErrorHandler.generateError('describle undefined', 404, 'UNDEFINED');
+
+        let updateThesis = ThesesRepository.updateAttributes(thesis, {describle})
+        if(!updateThesis) throw ErrorHandler.generateError('unknown error', 500, 'UNKNOWN')
+        else {
+            let createActivity = ActivitiesRepository.create({
+                userId: userId,
+                content: 'thêm mô tả cho khóa luận',
+                state: Constant.ACTIVITY_STATE.LOGGING,
+                creatorId: userId
+            })
+            let numberNewActivity = lecturer.numberNewActivity + 1
+            let updateLecturer =  LecturersRepository.updateAttributes(lecturer, {numberNewActivity})
+            await Promise.all([createActivity, updateLecturer])
+            return updateThesis
+        }
+    }
 }
 
 module.exports = LecturerThesisService
