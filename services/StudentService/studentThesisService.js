@@ -59,6 +59,38 @@ class StudentThesisService {
         }
     }
 
+    static async exitThesis(userId, thesisId) {
+        let student = await StudentsRepository.findOne({
+            where: {userId}
+        });
+        if(!student) throw ErrorHandler.generateError('student not found', 404, 'NOT FOUND');
+        let thesis = await ThesesRepository.findOne({
+            where: {
+                id: thesisId,
+                studentId: student.id,
+                state: Constant.THESIS_STATE.WAITTING
+            }
+        });
+        if(!thesis) throw ErrorHandler.generateError('thesis invalid', 400, 'INVALID');
+        let thesisUpdate = ThesesRepository.updateAttributes(thesis, {state: Constant.THESIS_STATE.NEW, studentId: null})
+        if(!thesisUpdate) throw ErrorHandler.generateError('unknown error', 500, 'UNKNOWN')
+        else {
+            let lecturer = await LecturersRepository.findOne({where: {id: thesisUpdate.lecturerId}})
+            let createActivity = ActivitiesRepository.create({
+                userId: lecturer.userId,
+                content: 'hủy đăng ký khóa luận',
+                state: Constant.ACTIVITY_STATE.LOGGING,
+                creatorId: userId
+            })
+            let numberNewActivity = student.numberNewActivity + 1
+            let updateActivityStudent =  StudentsRepository.updateAttributes(student, {numberNewActivity})
+            let numberNewActivityLecturer = lecturer.numberNewActivity + 1
+            let updateActivityLecturer = LecturersRepository.updateAttributes(lecturer, {numberNewActivity: numberNewActivityLecturer})
+            await Promise.all([createActivity, updateActivityStudent, updateActivityLecturer])
+            return thesisUpdate
+        }
+    }
+
     static async planningThesis(userId, thesisId, planningData) {
         let student = await StudentsRepository.findOne({
             where: {userId}
