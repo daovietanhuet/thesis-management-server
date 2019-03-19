@@ -14,9 +14,9 @@ class studentThesis {
   
     registerRoute(router) {
       return router
-        .post('/student/thesis/join/:thesisId', verifyToken, this.joinThesis)
-        .patch('/student/thesis/plan/:thesisId', verifyToken, this.planningThesis)
-        .post('/student/thesis/report/:thesisId', verifyToken, this.reportThesis)
+        .post('/student/thesis/join/:thesisId', verifyToken, this.joinThesis)       //đăng ký khóa luận
+        .patch('/student/thesis/plan/:thesisId', verifyToken, this.planningThesis)  //lên kế hoạch cho khóa luận đăng ký
+        .post('/student/thesis/report/:thesisId', verifyToken, this.reportThesis)   //báo cáo thường xuyên cho khóa luận
     }
 
     joinThesis(req, res, next) {

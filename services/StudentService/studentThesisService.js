@@ -20,7 +20,14 @@ class StudentThesisService {
         if(!thesis) throw ErrorHandler.generateError('thesis not found or not new', 400, 'NOT FOUND');
 
         let numberJoinedThesis = ThesesRepository.count({
-            where: {studentId: student.id}
+            where: {
+                studentId: student.id,
+                $or: [
+                    {state: Constant.THESIS_STATE.WAITTING},
+                    {state: Constant.THESIS_STATE.ACTIVE},
+                    {state: Constant.THESIS_STATE.COMPLETED}
+                ]
+            }
         }); 
         let numberJoinedThesisOfLecturer = ThesesRepository.count({
             where: {lecturerId: thesis.lecturerId, state: Constant.THESIS_STATE.ACTIVE}

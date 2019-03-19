@@ -14,9 +14,12 @@ class lecturerThesis {
   
     registerRoute(router) {
       return router
-        .post('/lecturer/thesis/create', verifyToken, this.createThesis)
-        .post('/lecturer/thesis/accept/:thesisId', verifyToken, this.acceptThesis)
-        .post('/lecturer/thesis/reject/:thesisId', verifyToken, this.rejectThesis)
+        .post('/lecturer/thesis/create', verifyToken, this.createThesis)           // tạo mới khóa luận
+        .post('/lecturer/thesis/delete/:thesisId', verifyToken, this.deleteThesis) // xóa khóa luận vừa tạo
+        .post('/lecturer/thesis/accept/:thesisId', verifyToken, this.acceptThesis) // chấp nhận đăng ký khóa luận
+        .post('/lecturer/thesis/reject/:thesisId', verifyToken, this.rejectThesis) // từ chối đăng ký khóa luận
+        .patch('/lecturer/thesis/mark/:thesisId', verifyToken, this.markThesis)    // chấm điểm khóa luận
+        .post('/lecturer/thesis/cancel/:thesisId', verifyToken, this.cancelThesis) // hoãn khóa luận đang hoạt động
     }
 
     createThesis(req, res, next) {
@@ -29,6 +32,19 @@ class lecturerThesis {
           .catch(error => {
             next(ErrorHandler.createErrorWithFailures(error.message, error.httpCode || 500, error.name || 'SERVER_ERROR', error.failures))
           })
+    }
+
+    deleteThesis(req, res, next) {
+      let {userId, userRole} = req;
+      let thesisId = req.params.thesisId;
+      verifyRole(userRole, false, true, false);
+      LecturerThesisService.deleteThesis(userId, thesisId)
+        .then(result => {
+          res.status(200).json({result, httpCode:200})
+        })
+        .catch(error => {
+          next(ErrorHandler.createErrorWithFailures(error.message, error.httpCode || 500, error.name || 'SERVER_ERROR', error.failures))
+        })
     }
 
     acceptThesis(req, res, next) {
@@ -55,7 +71,33 @@ class lecturerThesis {
         .catch(error => {
           next(ErrorHandler.createErrorWithFailures(error.message, error.httpCode || 500, error.name || 'SERVER_ERROR', error.failures))
         })
-  }
+    }
+
+    markThesis(req, res, next) {
+      let {userId, userRole} = req;
+      let thesisId = req.params.thesisId;
+      verifyRole(userRole, false, true, false);
+      LecturerThesisService.markThesis(userId, thesisId, req.body.mark)
+        .then(result => {
+          res.status(200).json({result, httpCode:200})
+        })
+        .catch(error => {
+          next(ErrorHandler.createErrorWithFailures(error.message, error.httpCode || 500, error.name || 'SERVER_ERROR', error.failures))
+        })
+    }
+
+    cancelThesis(req, res, next) {
+      let {userId, userRole} = req;
+      let thesisId = req.params.thesisId;
+      verifyRole(userRole, false, true, false);
+      LecturerThesisService.cancelThesis(userId, thesisId)
+        .then(result => {
+          res.status(200).json({result, httpCode:200})
+        })
+        .catch(error => {
+          next(ErrorHandler.createErrorWithFailures(error.message, error.httpCode || 500, error.name || 'SERVER_ERROR', error.failures))
+        })
+    }
 }
 
 let instance = new lecturerThesis();

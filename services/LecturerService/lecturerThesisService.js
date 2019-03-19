@@ -69,6 +69,7 @@ class LecturerThesisService {
             if(numberAcceptedThesis === 4){
                 let waitingThesis = await ThesesRepository.findAll({where: {lecturerId: lecturer.id, state: Constant.THESIS_STATE.WAITTING}})
                 for(ii = 0; ii < waitingThesis.length; ii++){
+                    await ThesesRepository.updateAttributes(waitingThesis, {state: Constant.THESIS_STATE.CANCELED})
                     let studentWaiting = await StudentsRepository.findOne({where:{id: waitingThesis[ii].studentId}});
                     waitingThesis[ii] = ActivitiesRepository.create({
                         userId: studentWaiting.userId,
@@ -132,6 +133,127 @@ class LecturerThesisService {
             let updateStudent = StudentsRepository.updateAttributes(student, {numberNewActivity: numberNewActivityStudent})
             await Promise.all([createActivity, updateLecturer, updateStudent])
             return updateThesis
+        }
+    }
+
+    static async markThesis(userId, thesisId, mark) {
+        let lecturer = await LecturersRepository.findOne({
+            where: {userId}
+        })
+        if(!lecturer) throw ErrorHandler.generateError('lecturer not found', 404, 'NOT FOUND');
+
+        let thesis = await ThesesRepository.findOne({
+            where: {
+                id: thesisId, 
+                lecturerId: lecturer.id, 
+                state: Constant.THESIS_STATE.ACTIVE,
+            }
+        })
+        if(!thesis) throw ErrorHandler.generateError('invalid thesis', 400, 'INVALID');
+
+        let state = Constant.THESIS_STATE.COMPLETED
+        if(!mark || mark < 0 || mark > 10) throw ErrorHandler.generateError('invalid mark', 400, 'INVALID');
+        else if(mark < 4) state = Constant.THESIS_STATE.CANCELED
+
+        let studentId = thesis.studentId
+        let updateThesis = ThesesRepository.updateAttributes(thesis, {state, thesisMark: mark})
+        if(!updateThesis) throw ErrorHandler.generateError('unknown error', 500, 'UNKNOWN')
+        else if (mark >= 4) {
+            let student = await StudentsRepository.findOne({where:{id:studentId}});
+            let createActivity = ActivitiesRepository.create({
+                userId: student.userId,
+                content: 'chấm điểm hoàn thành khóa luận',
+                state: Constant.ACTIVITY_STATE.LOGGING,
+                creatorId: userId
+            })
+            let numberNewActivity = lecturer.numberNewActivity + 1
+            let numberCompletedThesis = lecturer.numberCompletedThesis + 1
+            let updateLecturer =  LecturersRepository.updateAttributes(lecturer, {numberNewActivity, numberCompletedThesis})
+            let numberNewActivityStudent = student.numberNewActivity + 1
+            let numberCompletedThesisStudent = 1
+            let updateStudent = StudentsRepository.updateAttributes(student, {numberNewActivity: numberNewActivityStudent, numberCompletedThesis: numberCompletedThesisStudent})
+            await Promise.all([createActivity, updateLecturer, updateStudent])
+            return updateThesis
+        } else if (mark < 4) {
+            let student = await StudentsRepository.findOne({where:{id:studentId}});
+            let createActivity = ActivitiesRepository.create({
+                userId: student.userId,
+                content: 'hoãn khóa luận',
+                state: Constant.ACTIVITY_STATE.LOGGING,
+                creatorId: userId
+            })
+            let numberNewActivity = lecturer.numberNewActivity + 1
+            let updateLecturer =  LecturersRepository.updateAttributes(lecturer, {numberNewActivity})
+            let numberNewActivityStudent = student.numberNewActivity + 1
+            let updateStudent = StudentsRepository.updateAttributes(student, {numberNewActivity: numberNewActivityStudent})
+            await Promise.all([createActivity, updateLecturer, updateStudent])
+            return updateThesis
+        }
+    }
+
+    static async cancelThesis(userId, thesisId) {
+        let lecturer = await LecturersRepository.findOne({
+            where: {userId}
+        })
+        if(!lecturer) throw ErrorHandler.generateError('lecturer not found', 404, 'NOT FOUND');
+
+        let thesis = await ThesesRepository.findOne({
+            where: {
+                id: thesisId, 
+                lecturerId: lecturer.id, 
+                state: Constant.THESIS_STATE.ACTIVE,
+            }
+        })
+        if(!thesis) throw ErrorHandler.generateError('invalid thesis', 400, 'INVALID');
+
+        let studentId = thesis.studentId
+        let updateThesis = ThesesRepository.updateAttributes(thesis, {state: Constant.THESIS_STATE.CANCELED})
+        if(!updateThesis) throw ErrorHandler.generateError('unknown error', 500, 'UNKNOWN')
+        else {
+            let student = await StudentsRepository.findOne({where:{id:studentId}});
+            let createActivity = ActivitiesRepository.create({
+                userId: student.userId,
+                content: 'hoãn khóa luận',
+                state: Constant.ACTIVITY_STATE.LOGGING,
+                creatorId: userId
+            })
+            let numberNewActivity = lecturer.numberNewActivity + 1
+            let updateLecturer =  LecturersRepository.updateAttributes(lecturer, {numberNewActivity})
+            let numberNewActivityStudent = student.numberNewActivity + 1
+            let updateStudent = StudentsRepository.updateAttributes(student, {numberNewActivity: numberNewActivityStudent})
+            await Promise.all([createActivity, updateLecturer, updateStudent])
+            return updateThesis
+        }
+    }
+
+    static async deleteThesis(userId, thesisId) {
+        let lecturer = await LecturersRepository.findOne({
+            where: {userId}
+        })
+        if(!lecturer) throw ErrorHandler.generateError('lecturer not found', 404, 'NOT FOUND');
+
+        let thesis = await ThesesRepository.findOne({
+            where: {
+                id: thesisId, 
+                lecturerId: lecturer.id, 
+                state: Constant.THESIS_STATE.NEW
+            }
+        })
+        if(!thesis) throw ErrorHandler.generateError('invalid thesis', 400, 'INVALID');
+
+        let deleteThesis = ThesesRepository.destroy({where:{id: thesis.id}})
+        if(!deleteThesis) throw ErrorHandler.generateError('unknown error', 500, 'UNKNOWN')
+        else {
+            let createActivity = ActivitiesRepository.create({
+                userId: userId,
+                content: 'xóa khóa luận',
+                state: Constant.ACTIVITY_STATE.LOGGING,
+                creatorId: userId
+            })
+            let numberNewActivity = lecturer.numberNewActivity + 1
+            let updateLecturer =  LecturersRepository.updateAttributes(lecturer, {numberNewActivity})
+            await Promise.all([createActivity, updateLecturer])
+            return deleteThesis
         }
     }
 }
