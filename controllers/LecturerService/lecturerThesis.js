@@ -14,12 +14,13 @@ class lecturerThesis {
   
     registerRoute(router) {
       return router
-        .post('/lecturer/thesis/create', verifyToken, this.createThesis)           // tạo mới khóa luận
-        .post('/lecturer/thesis/delete/:thesisId', verifyToken, this.deleteThesis) // xóa khóa luận vừa tạo
-        .post('/lecturer/thesis/accept/:thesisId', verifyToken, this.acceptThesis) // chấp nhận đăng ký khóa luận
-        .post('/lecturer/thesis/reject/:thesisId', verifyToken, this.rejectThesis) // từ chối đăng ký khóa luận
-        .patch('/lecturer/thesis/mark/:thesisId', verifyToken, this.markThesis)    // chấm điểm khóa luận
-        .post('/lecturer/thesis/cancel/:thesisId', verifyToken, this.cancelThesis) // hoãn khóa luận đang hoạt động
+        .post('/lecturer/thesis/create', verifyToken, this.createThesis)                  // tạo mới khóa luận
+        .delete('/lecturer/thesis/delete/:thesisId', verifyToken, this.deleteThesis)      // xóa khóa luận vừa tạo
+        .patch('/lecturer/thesis/describle/:thesisId', verifyToken, this.describleThesis) // sửa mô tả cho khóa luận
+        .post('/lecturer/thesis/accept/:thesisId', verifyToken, this.acceptThesis)        // chấp nhận đăng ký khóa luận
+        .post('/lecturer/thesis/reject/:thesisId', verifyToken, this.rejectThesis)        // từ chối đăng ký khóa luận
+        .patch('/lecturer/thesis/mark/:thesisId', verifyToken, this.markThesis)           // chấm điểm khóa luận
+        .post('/lecturer/thesis/cancel/:thesisId', verifyToken, this.cancelThesis)        // hoãn khóa luận đang hoạt động
     }
 
     createThesis(req, res, next) {
@@ -39,6 +40,19 @@ class lecturerThesis {
       let thesisId = req.params.thesisId;
       verifyRole(userRole, false, true, false);
       LecturerThesisService.deleteThesis(userId, thesisId)
+        .then(result => {
+          res.status(200).json({result, httpCode:200})
+        })
+        .catch(error => {
+          next(ErrorHandler.createErrorWithFailures(error.message, error.httpCode || 500, error.name || 'SERVER_ERROR', error.failures))
+        })
+    }
+
+    describleThesis(req, res, next) {
+      let {userId, userRole} = req;
+      let thesisId = req.params.thesisId;
+      verifyRole(userRole, false, true, false);
+      LecturerThesisService.describleThesis(userId, thesisId, req.body)
         .then(result => {
           res.status(200).json({result, httpCode:200})
         })
