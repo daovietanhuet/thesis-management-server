@@ -36,8 +36,8 @@ node_modules
 npm-debug.log
 package-lock.json
 
-#config ignore
-config/*.json
+# #config ignore
+# config/*.json
 
 #docker
 .env
