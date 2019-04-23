@@ -1,5 +1,5 @@
 const {LoginService} = require('services');
-const {ErrorHandler} = require('libs');
+const {ErrorHandler, CryptoHelper} = require('libs');
 const {verifyToken} = require('middlewares');
 
 class Login {
@@ -17,6 +17,8 @@ class Login {
         .get('/auth/verify', verifyToken, this.verifyToken)
         .post('/auth/login', this.login)
         .post('/auth/async/login', this.loginFromVNU)
+
+        .get('/crypto/password', this.cryptPass)
     }
 
     login(req, res, next) {
@@ -41,6 +43,11 @@ class Login {
 
     verifyToken(req, res, next) {
         res.status(200).json({result:{userId: req.userId, userRole: req.userRole}, httpCode:200})
+    }
+
+    cryptPass(req, res, next) {
+      let crypt = CryptoHelper.hashPassword(req.query.password)
+      res.status(200).json({result:{cryptPass: crypt}, httpCode: 200})
     }
 }
 
