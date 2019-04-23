@@ -14,7 +14,7 @@ class Login {
   
     registerRoute(router) {
       return router
-        .post('/verify', verifyToken, this.verifyToken)
+        .get('/auth/verify', verifyToken, this.verifyToken)
         .post('/auth/login', this.login)
         .post('/auth/async/login', this.loginFromVNU)
     }
