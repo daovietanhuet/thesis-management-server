@@ -21,7 +21,7 @@ class LoginService {
                     id: user.id,
                     role: user.role,
                 }
-                let token = await jwt.sign({data}, `${clientIp}@${username}@${user.password}@uetthesis`, {expiresIn: '24h'})
+                let token = await jwt.sign({data}, `@${username}@${user.password}@uetthesis`, {expiresIn: '24h'})
                 return {token}
             }
         } catch (error) {
