@@ -1,4 +1,4 @@
-const {ThesesRepository} = require('repositories');
+const {ThesesRepository, StudentsRepository, LecturersRepository} = require('repositories');
 const {Constant} = require('libs');
 
 class ThesisInfoService {
@@ -22,18 +22,20 @@ class ThesisInfoService {
         });
         if(section === 'self' && userRole !== Constant.USER_ROLE.MANAGER) {
             if (userRole === Constant.USER_ROLE.STUDENT) {
+                let student = await StudentsRepository.findOne({where: {userId: userId}})
                 let listThesis = await ThesesRepository.findAll({
                     where: {
-                        studentId: userId,
+                        studentId: student.id,
                         ...data
                     }
                 })
                 return listThesis
             }
             else if (userRole === Constant.USER_ROLE.LECTURER) {
+                let lecturer = await LecturersRepository.findOne({where: {userId: userId}})
                 let listThesis = await ThesesRepository.findAll({
                     where: {
-                        lecturerId: userId,
+                        lecturerId: lecturer.id,
                         ...data
                     }
                 })

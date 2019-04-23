@@ -1,25 +1,25 @@
-const {StudentsRepository, ThesesRepository} = require('repositories');
+const {LecturersRepository, ThesesRepository} = require('repositories');
 const {Constant} = require('libs');
 
-class StudentInfoService {
-    static async getStudent(userId, userRole, query) {
+class lecturerInfoService {
+    static async getLecturer(userId, userRole, query) {
         let properties = [
             {field: 'id', type: 'integer'},
             {field: 'fullName', type: 'string'},
             {field: 'birthday', type: 'string'}, 
             {field: 'phone', type: 'string'},
             {field: 'email', type: 'string'},
-            {field: 'class', type: 'string'},
+            {field: 'branch', type: 'string'},
         ]
         let data = {};
 
-        if(userRole === Constant.USER_ROLE.STUDENT) {
-            let student = await StudentsRepository.findOne({
+        if(userRole === Constant.USER_ROLE.LECTURER) {
+            let Lecturer = await LecturersRepository.findOne({
                 where: {
                     userId: userId
                 }
             })
-            return student
+            return Lecturer
         } else {
             properties.map((ele) => {
                 if(query[ele.field]){
@@ -27,23 +27,23 @@ class StudentInfoService {
                     else data[ele.field] = query[ele.field]
                 }
             });
-            let listStudent = await StudentsRepository.findAll({
+            let listLecturer = await LecturersRepository.findAll({
                 where: {
                     ...data
                 },
                 raw: true
             })
-            for(let i = 0; i < listStudent.length; i++) {
-                let thesis = await ThesesRepository.findOne({
+            for(let i = 0; i < listLecturer.length; i++) {
+                let thesis = await ThesesRepository.findAll({
                     where: {
-                        studentId: listStudent[i].id
+                        lecturerId: listLecturer[i].id
                     }
                 })
-                listStudent[i].thesis = thesis
+                listLecturer[i].thesis = thesis
             }
-            return listStudent
+            return listLecturer
         }
     }
 }
 
-module.exports = StudentInfoService
+module.exports = lecturerInfoService
