@@ -1,24 +1,10 @@
 {
-  "development": {
+  "production": {
     "username": "qyccqvlgtihamh",
     "password": "384cd6ed8950948918a39f693c863c6345a6effa47137b09c30525631c622b2e",
     "database": "dc5gdlj05qmrsg",
     "host": "54.197.239.115",
     "port":"5432",
     "dialect": "posgresql"
-  },
-  "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
-  },
-  "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
   }
 }
