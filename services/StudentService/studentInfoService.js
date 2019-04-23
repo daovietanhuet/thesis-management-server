@@ -1,4 +1,4 @@
-const {StudentsRepository} = require('repositories');
+const {StudentsRepository, ThesesRepository} = require('repositories');
 const {Constant} = require('libs');
 
 class StudentInfoService {
@@ -17,7 +17,7 @@ class StudentInfoService {
         if(userRole === Constant.USER_ROLE.STUDENT) {
             let student = await StudentsRepository.findOne({
                 where: {
-                    id: userId
+                    userId: userId
                 }
             })
             return student
@@ -31,8 +31,17 @@ class StudentInfoService {
             let listStudent = await StudentsRepository.findAll({
                 where: {
                     ...data
-                }
+                },
+                raw: true
             })
+            for(let i = 0; i < listStudent.length; i++) {
+                let thesis = await ThesesRepository.findOne({
+                    where: {
+                        studentId: listStudent[i].userId
+                    }
+                })
+                listStudent[i].thesis = thesis
+            }
             return listStudent
         }
     }
