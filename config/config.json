@@ -5,6 +5,7 @@
     "database": "dc5gdlj05qmrsg",
     "host": "54.197.239.115",
     "port":"5432",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "ssl":true
   }
 }
