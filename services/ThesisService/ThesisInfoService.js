@@ -35,8 +35,7 @@ class ThesisInfoService {
                     where: {
                         lecturerId: userId,
                         ...data
-                    },
-                    limit: 10
+                    }
                 })
                 return listThesis
             }
@@ -45,7 +44,6 @@ class ThesisInfoService {
                 where: {
                     ...data
                 },
-                limit: 10,
                 attributes: ['id', 'thesisCode', 'thesisSubject', 'lecturerId', 'state', 'describle', 'university', 'branch', 'created_at', 'updated_at']
             })
             return listThesis
@@ -53,8 +51,7 @@ class ThesisInfoService {
             let listThesis = await ThesesRepository.findAll({
                 where: {
                     ...data
-                },
-                limit: 10
+                }
             })
             return listThesis
         }
