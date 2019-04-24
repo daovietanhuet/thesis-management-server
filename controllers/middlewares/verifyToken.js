@@ -21,13 +21,13 @@ module.exports = async (req, res, next) => {
                     req.userRole = result.data.role;
                     next();
                 } else {
-                    throw ErrorHandler.generateError('permission denied', 401, 'PERMISSION DENIED')
+                    return next(ErrorHandler.generateError('permission denied', 401, 'PERMISSION DENIED'))
                 }
             } else {
-                throw ErrorHandler.generateError('permission denied', 401, 'PERMISSION DENIED')
+                return next(ErrorHandler.generateError('permission denied', 401, 'PERMISSION DENIED'))
             }
         } catch (error) {
-            throw ErrorHandler.generateError('permission denied', 401, 'PERMISSION DENIED')
+            return next(ErrorHandler.generateError('permission denied', 401, 'PERMISSION DENIED'))
         }
     } else {
         res.sendStatus(403)
