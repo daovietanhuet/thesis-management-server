@@ -14,17 +14,18 @@ module.exports = (req, res, next) => {
                 where:{id:decoded.data.id},
                 attributes:['password','username']
             })
-            .then (user => {
-                jwt.verify(bearerToken, `@${user.username}@${user.password}@uetthesis`, (error, result)=>{
-                    if(result){
-                        req.userId = result.data.id
-                        req.userRole = result.data.role
-                        next()
-                    } else if (error) {
-                        next(ErrorHandler.generateError('permission denied', 401, 'PERMISSION DENIED'))
-                    }
+                .then (user => {
+                    jwt.verify(bearerToken, `@${user.username}@${user.password}@uetthesis`, (error, result)=>{
+                        if(result){
+                            req.userId = result.data.id
+                            req.userRole = result.data.role
+                            next()
+                        } else if (error) {
+                            next(ErrorHandler.generateError('permission denied', 401, 'PERMISSION DENIED'))
+                        }
+                    })
                 })
-            })
+                .catch (error => {throw error})
         } catch (error) {
             throw ErrorHandler.generateError('permission denied', 401, 'PERMISSION DENIED')
         }
