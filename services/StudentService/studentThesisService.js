@@ -72,7 +72,7 @@ class StudentThesisService {
             }
         });
         if(!thesis) throw ErrorHandler.generateError('thesis invalid', 400, 'INVALID');
-        let thesisUpdate = ThesesRepository.updateAttributes(thesis, {state: Constant.THESIS_STATE.NEW, studentId: null})
+        let thesisUpdate = await ThesesRepository.updateAttributes(thesis, {state: Constant.THESIS_STATE.NEW, studentId: null})
         if(!thesisUpdate) throw ErrorHandler.generateError('unknown error', 500, 'UNKNOWN')
         else {
             let lecturer = await LecturersRepository.findOne({where: {id: thesisUpdate.lecturerId}})
