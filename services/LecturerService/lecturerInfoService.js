@@ -13,7 +13,7 @@ class lecturerInfoService {
         ]
         let data = {};
 
-        if(userRole === Constant.USER_ROLE.LECTURER) {
+        if(userRole === Constant.USER_ROLE.LECTURER && query.section === 'self') {
             let Lecturer = await LecturersRepository.findOne({
                 where: {
                     userId: userId
