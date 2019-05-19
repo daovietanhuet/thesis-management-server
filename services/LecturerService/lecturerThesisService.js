@@ -272,7 +272,7 @@ class LecturerThesisService {
         })
         if(!thesis) throw ErrorHandler.generateError('invalid thesis', 400, 'INVALID');
 
-        if(!describe || typeof describe !== 'string')  throw ErrorHandler.generateError('describle undefined', 404, 'UNDEFINED');
+        if(!describle || typeof describle !== 'string')  throw ErrorHandler.generateError('describle undefined', 404, 'UNDEFINED');
 
         let updateThesis = ThesesRepository.updateAttributes(thesis, {describle})
         if(!updateThesis) throw ErrorHandler.generateError('unknown error', 500, 'UNKNOWN')
