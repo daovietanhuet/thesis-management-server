@@ -52,7 +52,7 @@ class lecturerThesis {
       let {userId, userRole} = req;
       let thesisId = req.params.thesisId;
       verifyRole(userRole, false, true, false);
-      LecturerThesisService.describleThesis(userId, thesisId, req.body)
+      LecturerThesisService.describleThesis(userId, thesisId, req.body.describle)
         .then(result => {
           res.status(200).json({result, httpCode:200})
         })
